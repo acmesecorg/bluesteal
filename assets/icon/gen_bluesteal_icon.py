@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
 """Generate the Bluesteal icon at arbitrary sizes.
 
-The design mirrors the (now corrected) Android adaptive icon foreground:
-- 108x108 base viewport
-- Background fill #0E1A2B
-- Light-blue circle (#4FC3F7) at center, radius 26
-- Two triangle "arrows" cut out (showing the dark background through):
-  - Top:    apex (54,33), base (46,49)-(62,49)
-  - Bottom: apex (54,75), base (46,59)-(62,59)
+108x108 viewport. Layers (bottom to top):
+- Full-bleed background       #7ED6E8 (light cyan)
+- Outer ring                  #F0F8FF, center (54,54), radius 38
+- Inner medium-blue disc      #1BA7E3, center (54,54), radius 31
+- Top arrow (apex up)         #F0F8FF, (54,33)-(62,49)-(46,49)
+- Bottom arrow (apex down)    #F0F8FF, (54,75)-(46,59)-(62,59)
+
+Android composes the same design via its adaptive-icon background +
+foreground layers (see app/src/main/res/...).
 """
 from PIL import Image, ImageDraw
 import os
 import sys
 
-BG = (0x0E, 0x1A, 0x2B, 255)
-FG = (0x4F, 0xC3, 0xF7, 255)
+BG = (0x7E, 0xD6, 0xE8, 255)
+RING = (0xF0, 0xF8, 0xFF, 255)
+INNER = (0x1B, 0xA7, 0xE3, 255)
 VP = 108.0
 
-CIRCLE_C = (54, 54)
-CIRCLE_R = 26
+CENTER = (54, 54)
+OUTER_R = 38
+INNER_R = 31
 TRI_TOP = [(54, 33), (62, 49), (46, 49)]
 TRI_BOT = [(54, 75), (46, 59), (62, 59)]
 
@@ -31,13 +35,12 @@ def render(size: int, opaque_bg: bool = True) -> Image.Image:
     bg = BG if opaque_bg else (0, 0, 0, 0)
     img = Image.new("RGBA", (n, n), bg)
     draw = ImageDraw.Draw(img)
-    cx, cy = CIRCLE_C[0] * s, CIRCLE_C[1] * s
-    r = CIRCLE_R * s
-    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
-    # Cut out the arrows by drawing them in the background color.
-    cutout = BG if opaque_bg else (0, 0, 0, 0)
-    draw.polygon([(x * s, y * s) for x, y in TRI_TOP], fill=cutout)
-    draw.polygon([(x * s, y * s) for x, y in TRI_BOT], fill=cutout)
+    cx, cy = CENTER[0] * s, CENTER[1] * s
+    r_out, r_in = OUTER_R * s, INNER_R * s
+    draw.ellipse((cx - r_out, cy - r_out, cx + r_out, cy + r_out), fill=RING)
+    draw.ellipse((cx - r_in, cy - r_in, cx + r_in, cy + r_in), fill=INNER)
+    draw.polygon([(x * s, y * s) for x, y in TRI_TOP], fill=RING)
+    draw.polygon([(x * s, y * s) for x, y in TRI_BOT], fill=RING)
     return img.resize((size, size), Image.LANCZOS)
 
 

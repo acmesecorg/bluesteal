@@ -1,0 +1,6 @@
+# Per-user TURN rotation cheat sheet — contains real Cloudflare API tokens
+# and ephemeral credentials. Never commit.
+TURN_ROTATION.local.md
+
+# macOS Finder droppings
+.DS_Store

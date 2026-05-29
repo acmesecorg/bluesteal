@@ -16,179 +16,75 @@ implementations live in their own repos alongside this one:
 
 | Repo | Stack | Role |
 |------|-------|------|
-| [`bluesteal-windows`](../bluesteal-windows) | C# / WinUI 3 / SIPSorcery | Canonical port — the protocol reference. |
-| [`bluesteal-macos`](../bluesteal-macos) | Swift / SwiftUI / WebRTC.framework | Mac desktop client. |
-| [`bluesteal-ios`](../bluesteal-ios) | Swift / SwiftUI / WebRTC.framework | iOS client (scan + relay; iOS can't re-broadcast). |
-| [`bluesteal-android`](../bluesteal-android) | Kotlin / Compose / io.github.webrtc-sdk | Android client (full scan + re-broadcast). |
+| [`bluesteal-windows`](../bluesteal-windows) | C# / WinUI 3 | Canonical port — the protocol reference. Dual-role + re-broadcast. |
+| [`bluesteal-macos`](../bluesteal-macos) | Swift / SwiftUI | Mac desktop client. Dual-role + re-broadcast. |
+| [`bluesteal-ios`](../bluesteal-ios) | Swift / SwiftUI | iOS client. **Host-only** (scan + host; iOS can't join or re-broadcast). |
+| [`bluesteal-android`](../bluesteal-android) | Kotlin / Jetpack Compose | Android client. Dual-role + faithful re-broadcast (all variants). |
 
-All four speak the same wire protocol: WebRTC data channel between paired
-devices, with signalling over a public MQTT broker. See
-[`specs/PORTING_GUIDE.md`](specs/PORTING_GUIDE.md) for the protocol in detail.
+All four speak the same wire protocol over a single transport: a **caBLE
+tunnel** (see below). The cryptography is byte-compatible across .NET, CryptoKit
+(Apple) and BouncyCastle (Android), so any platform can pair with any other.
 
 ---
 
 ## Architecture in one paragraph
 
-Devices pair by exchanging a 5-letter code over the user's voice/eyeball
-("read this to your phone"). The code seeds an FNV-1a hash that picks the
-same MQTT broker on both ends (HiveMQ / EMQX / Mosquitto are tried in a
-fixed lock-step order). Both sides subscribe to topics under
-`bluesteal/v1/<code>/{offer,answer,ice/host,ice/peer,bye}` and complete a
-standard WebRTC SDP + ICE handshake there. Once the data channel opens, MQTT
-is disconnected and adverts flow over the channel directly, with a 4-second
-bidirectional heartbeat to keep NAT mappings warm. Either side can
-re-broadcast received adverts over its own BLE radio (on platforms that
-allow it) so a third device watching the air sees them.
+Devices pair over the public **caBLE tunnel servers** (`cable.ua5v.com` et al.)
+— the same WebSocket bridges Chromium and FIDO authenticators use for hybrid
+sign-in, here carrying bluesteal's own framed messages instead of CTAP traffic.
+The host derives a tunnel slot from a short pairing code (HKDF-SHA256 →
+`tunnel_id`, pre-shared key, and a responder static key), opens
+`wss://<host>/cable/new/<tunnel_id>`, and learns its server-assigned 3-byte
+`routing_id`. It surfaces an **11-character out-of-band token** —
+`CODE-ROUTING`, e.g. `ABCDE-7C4A9C` — which the user shares the same way they'd
+share the code (verbally / iMessage / WhatsApp). The peer connects to
+`wss://<host>/cable/connect/<routing_id>/<tunnel_id>`; the two run a **Noise
+NKpsk0** handshake (used purely as an AEAD framing layer, *not* FIDO-grade
+authentication) and then exchange `RelayMessage` JSON. Because the relay caps
+idle sockets at ~60 s, the host runs a **make-before-break hop every 30 s** —
+opening a fresh tunnel and promoting the peer onto it without dropping the
+session — plus a ~2 s heartbeat to keep traffic flowing. Either side (except
+iOS) can re-broadcast received adverts over its own BLE radio so a third device
+watching the air sees them. There is **no STUN/TURN, no MQTT, and no WebRTC** —
+the legacy relay was retired in favour of this tunnel-only design.
 
----
+See [`specs/TUNNEL_SIDE_CHANNEL.md`](specs/TUNNEL_SIDE_CHANNEL.md) for the full
+derivation, the OOB-token rationale, and the empirical server-bridging results.
 
-## TURN relay configuration
-
-WebRTC tries three kinds of candidate pairs in order: **host** (same LAN),
-**srflx** (NAT-reflexive via STUN), and **relay** (TURN server). Same-LAN
-pairings work on host candidates and never need TURN. **Cross-AP** pairings
-(e.g. two devices on the same WiFi system but reaching different APs via a
-mesh / extender) and **cellular ↔ home** pairings frequently can't form
-host or srflx pairs, and need TURN.
-
-bluesteal needs a TURN provider with **valid credentials** to make those
-cases work. STUN-only is a fine starting point if you only ever pair on the
-same LAN — leave the credentials blank and the apps will skip the TURN
-entries silently.
-
-### Sign up for Cloudflare Realtime TURN (one-time, free tier)
-
-1. Go to [dash.cloudflare.com](https://dash.cloudflare.com/) and create an
-   account if you don't have one. Free tier — no card required.
-2. From the dashboard, open **Realtime** in the sidebar → **TURN Service**
-   → **Create a TURN key**. Name it something like `bluesteal-dev`.
-3. Cloudflare gives you two long-lived values. Save both — they're the
-   parent key, not the credentials you paste into apps:
-   - `TURN_KEY_ID`
-   - `TURN_KEY_API_TOKEN`
-4. Mint a *credential pair*. Cloudflare caps the TTL at **172 800 s
-   (2 days)** despite the docs implying longer is allowed — so manual
-   rotation is part of life on the free tier:
-
-   ```bash
-   TURN_KEY_ID=...        # from step 3
-   TURN_KEY_API_TOKEN=... # from step 3
-   curl -s https://rtc.live.cloudflare.com/v1/turn/keys/$TURN_KEY_ID/credentials/generate-ice-servers \
-     -H "Authorization: Bearer $TURN_KEY_API_TOKEN" \
-     -H "Content-Type: application/json" \
-     -d '{"ttl": 172800}' \
-     | jq -r '.iceServers[] | select(.username) | "username=\(.username)\ncredential=\(.credential)"'
-   ```
-
-   That prints the two strings the apps want.
-
-### Paste credentials into each platform
-
-Every repo has a **`Secrets.{swift,cs}.template`** committed with empty
-defaults plus a `.gitignore` rule for the real `Secrets.{swift,cs}` next to
-it. The `.template` suffix matters: Xcode 16's synchronized file groups and
-SDK-style `.csproj` globbing would otherwise compile both files and produce
-a duplicate-declaration error. On each fresh clone, copy the template once
-before first build:
-
-#### Android (`bluesteal-android`)
-
-`local.properties` is gitignored by default. Copy the example and fill in:
-
-```bash
-cd bluesteal-android
-cp local.properties.example local.properties
-# edit local.properties — set TURN_USERNAME and TURN_CREDENTIAL
-```
-
-The values get baked into `BuildConfig` at build time via
-`app/build.gradle.kts`, and `RelayClient.kt` reads them. Blank values are
-tolerated — falls back to STUN-only.
-
-#### macOS (`bluesteal-macos`)
-
-```bash
-cd bluesteal-macos
-cp Secrets.swift.template bluesteal/Secrets.swift
-# edit bluesteal/Secrets.swift — set turnUsername and turnCredential
-```
-
-No Xcode UI step needed — this project uses Xcode 16 synchronized file
-groups, so any `.swift` inside `bluesteal/` is picked up automatically on
-the next build. The file content is gitignored.
-
-#### iOS (`bluesteal-ios`)
-
-Same shape as macOS:
-
-```bash
-cd bluesteal-ios
-cp Secrets.swift.template bluesteal-ios/Secrets.swift
-# edit bluesteal-ios/Secrets.swift
-```
-
-Same synchronized-group story as macOS — no Xcode UI step.
-
-#### Windows (`bluesteal-windows`)
-
-```bash
-cd bluesteal-windows
-cp Bluesteal/Bluesteal/Secrets.cs.template Bluesteal/Bluesteal/Secrets.cs
-# edit Bluesteal/Bluesteal/Secrets.cs — set TurnUsername and TurnCredential
-```
-
-The `.csproj` uses SDK-style globbing, so the new `Secrets.cs` is picked
-up automatically on the next build — no project-file edit needed.
-
-### Rotating credentials
-
-Cloudflare caps the TTL at 2 days. When ICE starts failing on non-LAN
-pairings, re-run the curl from step 4 above and paste the new values into
-the same four files. Old credentials silently stop being accepted by the
-TURN server — symptom: `ice.connectionState = FAILED` on roams that
-previously worked via relay.
-
-For convenience, this project also lets you keep a gitignored
-`TURN_ROTATION.local.md` in the root repo with your actual `TURN_KEY_ID` and
-`TURN_KEY_API_TOKEN` inline alongside a one-shot bash that patches all four
-files. That file is excluded by `.gitignore` — never commit it.
-
-### Hosting your own TURN
-
-If you'd rather not depend on Cloudflare, the same secrets files take any
-TURN provider's credentials. The URL list inside each platform's
-`RelayClient` is the place to change the server hostname / ports. For a
-self-hosted [coturn](https://github.com/coturn/coturn) on a small VPS, two
-URLs is usually enough:
-
-```
-turn:your-turn.example.com:3478?transport=udp
-turns:your-turn.example.com:5349?transport=tcp
-```
+> **Off-label use.** The caBLE tunnel servers are operated by Google/Apple for
+> real FIDO traffic. Using them as a generic byte bridge works because the
+> server can't see inside the Noise channel, but it is unsupported and could be
+> rate-limited or blocked at any time. Two sessions sharing a code collide on
+> `tunnel_id` (they can't observe each other — the bridge is 1:1). This is a
+> personal-scale research tool, not a product.
 
 ---
 
 ## Building each platform
 
+No secrets or credentials are needed — the tunnel transport has no TURN/MQTT
+configuration. Just clone and build.
+
 ### macOS / iOS (Xcode)
 
 ```bash
 git clone https://github.com/<owner>/bluesteal-macos.git
-# fill in Secrets.swift (see above)
-open bluesteal-macos/bluesteal.xcodeproj
+open bluesteal-macos/bluesteal.xcodeproj      # scheme: bluesteal
 ```
 
-Same for iOS: clone `bluesteal-ios`, fill in `Secrets.swift`, open the
-`.xcodeproj`.
+Same for iOS: clone `bluesteal-ios`, open the `.xcodeproj` (scheme
+`bluesteal-ios`). Both use Xcode 16 file-system-synchronized groups, so any
+source file under the app folder is picked up automatically. iOS needs a signing
+team for device builds (`-allowProvisioningUpdates`).
 
 ### Android (Android Studio or CLI)
 
 ```bash
 git clone https://github.com/<owner>/bluesteal-android.git
 cd bluesteal-android
-cp local.properties.example local.properties
-# fill in local.properties with sdk.dir + TURN_USERNAME + TURN_CREDENTIAL
-./gradlew installDebug   # with an Android device or emulator attached
+# AGP needs JDK 17+. If your default `java` is older, point at Android Studio's JBR:
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+./gradlew installDebug                          # with a device/emulator attached
 ```
 
 Open in Android Studio if you prefer a GUI.
@@ -197,7 +93,6 @@ Open in Android Studio if you prefer a GUI.
 
 ```bash
 git clone https://github.com/<owner>/bluesteal-windows.git
-# edit Bluesteal/Bluesteal/Secrets.cs
 # open Bluesteal/Bluesteal.sln in Visual Studio and run
 ```
 
@@ -205,23 +100,68 @@ Requires the WinUI 3 / Windows App SDK workload.
 
 ---
 
+## Using it
+
+1. On one device, click **Host**. It shows an 11-character token
+   (`CODE-ROUTING`). Copy it.
+2. Share the token with the second device (out of band — read it aloud, message
+   it, etc.).
+3. On the second device, click **Join…**, paste the token, **Connect**.
+4. Within ~30–60 s the tunnel reaches **open** on both ends and live adverts
+   flow. Join promptly — the host's first tunnel socket ages out at the relay's
+   idle cap before the first hop engages.
+
+iOS is host-only: it always hosts, and a macOS/Windows peer joins its token.
+
+### Driving host/join for testing
+
+Each app can be auto-driven without tapping the UI; the hosted token is written
+to the trace log as a `token.ready` event.
+
+| Platform | Host | Join |
+|----------|------|------|
+| **macOS** | `open -n Bluesteal.app --args -host` | `open -n Bluesteal.app --args -join <TOKEN>` |
+| **Windows** | launch with `-host` (see the `Host` launch profile) | launch with `-join <TOKEN>` |
+| **Android** | `adb shell am start -n org.crainiate.bluesteal/.ui.MainActivity --ez host true` | `… --es join <TOKEN>` |
+| **iOS** | `bluesteal://host` URL (tap / Shortcut / Safari); simulator: `xcrun simctl launch <udid> org.crainiate.bluesteal-ios -host` | host-only — no join |
+
+---
+
+## Re-broadcast support
+
+When a session is open, a device can re-emit the adverts it receives from its
+peer over its own BLE peripheral, so a nearby CTAP hybrid client (e.g. Chrome on
+a laptop) can observe them. Fidelity varies by platform's BLE peripheral API:
+
+- **Windows / Android** — emit raw service-data and manufacturer-data, so every
+  advert variant is re-broadcast faithfully (HMAC tag intact).
+- **macOS** — `CBPeripheralManager` only accepts service-UUIDs from third-party
+  apps, so the EID is packed into a 128-bit service UUID (the Chromium `IS_MAC`
+  convention); a lossy but Chrome-on-macOS-compatible path.
+- **iOS** — cannot re-broadcast at all (Core Bluetooth peripheral mode rejects
+  raw service-data for third-party apps), hence host-only.
+
+See [`specs/REBROADCAST_PLAN.md`](specs/REBROADCAST_PLAN.md) for the design and
+[`specs/IOS_AUTHENTICATOR_CAPTURE.md`](specs/IOS_AUTHENTICATOR_CAPTURE.md) for
+the advert-capture work that informed it.
+
+---
+
 ## Project docs (`specs/`)
 
 | File | What it covers |
 |------|----------------|
-| [`PORTING_GUIDE.md`](specs/PORTING_GUIDE.md) | Wire protocol, broker selection, signalling topics, ICE handling. Read this first if you're writing a fifth port. |
-| [`MACOS_RELAY_PAIRING_FIXES.md`](specs/MACOS_RELAY_PAIRING_FIXES.md) | The "things to get right" list when adopting the relay code on a new platform — broker lock-step, candidate buffering, ICE-failed teardown, etc. |
-| [`RELAY_DEBUGGING.md`](specs/RELAY_DEBUGGING.md) | Per-PID JSONL tracer layout and how to read two trace files side-by-side when diagnosing a failed pairing. |
-| [`REBROADCAST_PLAN.md`](specs/REBROADCAST_PLAN.md) | Design notes for the "re-emit received adverts over the local BLE radio" feature. |
-| [`MACOS_UPDATES.md`](specs/MACOS_UPDATES.md) | Historical changes specific to the macOS port. |
-| [`IOS_AUTHENTICATOR_CAPTURE.md`](specs/IOS_AUTHENTICATOR_CAPTURE.md) | Notes on capturing hybrid-FIDO traffic on iOS for protocol research. |
+| [`TUNNEL_SIDE_CHANNEL.md`](specs/TUNNEL_SIDE_CHANNEL.md) | The caBLE tunnel transport: key derivation from the pairing code, the 11-char OOB token, make-before-break hops, server-bridging probe results, off-label-use risk. Read this first to understand the protocol. |
+| [`REBROADCAST_PLAN.md`](specs/REBROADCAST_PLAN.md) | Design of the "re-emit received adverts over the local BLE radio" feature, including the per-platform peripheral-API limits. |
+| [`IOS_AUTHENTICATOR_CAPTURE.md`](specs/IOS_AUTHENTICATOR_CAPTURE.md) | How to capture a native iOS authenticator's hybrid-transport advert (using the scanner's Diagnostic mode) and what wire format it uses. |
 
 ---
 
 ## Status
 
-Personal-scale research project. Pairing works cross-platform; the
-re-broadcast path is supported everywhere except iOS (Core Bluetooth peripheral
-mode rejects raw service-data for third-party apps).
+Personal-scale research project. Pairing works cross-platform over the caBLE
+tunnel; the re-broadcast path is supported everywhere except iOS. The earlier
+WebRTC-over-MQTT relay has been removed on all four platforms — the tunnel is
+now the only transport.
 
-Issues / PRs welcome — please don't commit your TURN credentials.
+Issues / PRs welcome.

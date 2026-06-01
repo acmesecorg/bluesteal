@@ -50,12 +50,12 @@ watching the air sees them.
 See [`specs/TUNNEL_SIDE_CHANNEL.md`](specs/TUNNEL_SIDE_CHANNEL.md) for the full
 derivation, the OOB-token rationale, and the empirical server-bridging results.
 
-> **Off-label use.** The caBLE tunnel servers are operated by Google/Apple for
-> real FIDO traffic. Using them as a generic byte bridge works because the
-> server can't see inside the Noise channel, but it is unsupported and could be
-> rate-limited or blocked at any time. Two sessions sharing a code collide on
-> `tunnel_id` (they can't observe each other — the bridge is 1:1). This is a
-> personal-scale research tool, not a product.
+> **Off-label use.** This should be used only as a proof of concept for a
+> side channel to share BLE adverts. It is not intended for any other purpose.
+> The caBLE tunnel servers are operated by Google/Apple for real FIDO traffic;
+> using them as a generic byte bridge works because the server can't see inside
+> the Noise channel, but it is unsupported and could be rate-limited or blocked
+> at any time.
 
 ---
 

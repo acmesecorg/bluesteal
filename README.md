@@ -16,10 +16,10 @@ implementations live in their own repos alongside this one:
 
 | Repo | Stack | Role |
 |------|-------|------|
-| [`bluesteal-windows`](../bluesteal-windows) | C# / WinUI 3 | Canonical port — the protocol reference. Dual-role + re-broadcast. |
-| [`bluesteal-macos`](../bluesteal-macos) | Swift / SwiftUI | Mac desktop client. Dual-role + re-broadcast. |
-| [`bluesteal-ios`](../bluesteal-ios) | Swift / SwiftUI | iOS client. **Host-only** (scan + host; iOS can't join or re-broadcast). |
-| [`bluesteal-android`](../bluesteal-android) | Kotlin / Jetpack Compose | Android client. Dual-role + faithful re-broadcast (all variants). |
+| [`bluesteal-windows`](https://github.com/acmesecorg/bluesteal-windows) | C# / WinUI 3 | Canonical port — the protocol reference. Dual-role + re-broadcast. |
+| [`bluesteal-macos`](https://github.com/acmesecorg/bluesteal-macos) | Swift / SwiftUI | Mac desktop client. Dual-role + re-broadcast. |
+| [`bluesteal-ios`](https://github.com/acmesecorg/bluesteal-ios) | Swift / SwiftUI | iOS client. **Host-only** (scan + host; iOS can't join or re-broadcast). |
+| [`bluesteal-android`](https://github.com/acmesecorg/bluesteal-android) | Kotlin / Jetpack Compose | Android client. Dual-role + faithful re-broadcast (all variants). |
 
 All four speak the same wire protocol over a single transport: a **caBLE
 tunnel** (see below). The cryptography is byte-compatible across .NET, CryptoKit
@@ -45,8 +45,7 @@ idle sockets at ~60 s, the host runs a **make-before-break hop every 30 s** —
 opening a fresh tunnel and promoting the peer onto it without dropping the
 session — plus a ~2 s heartbeat to keep traffic flowing. Either side (except
 iOS) can re-broadcast received adverts over its own BLE radio so a third device
-watching the air sees them. There is **no STUN/TURN, no MQTT, and no WebRTC** —
-the legacy relay was retired in favour of this tunnel-only design.
+watching the air sees them.
 
 See [`specs/TUNNEL_SIDE_CHANNEL.md`](specs/TUNNEL_SIDE_CHANNEL.md) for the full
 derivation, the OOB-token rationale, and the empirical server-bridging results.
@@ -62,13 +61,12 @@ derivation, the OOB-token rationale, and the empirical server-bridging results.
 
 ## Building each platform
 
-No secrets or credentials are needed — the tunnel transport has no TURN/MQTT
-configuration. Just clone and build.
+No secrets or credentials are needed — just clone and build.
 
 ### macOS / iOS (Xcode)
 
 ```bash
-git clone https://github.com/<owner>/bluesteal-macos.git
+git clone https://github.com/acmesecorg/bluesteal-macos.git
 open bluesteal-macos/bluesteal.xcodeproj      # scheme: bluesteal
 ```
 
@@ -80,7 +78,7 @@ team for device builds (`-allowProvisioningUpdates`).
 ### Android (Android Studio or CLI)
 
 ```bash
-git clone https://github.com/<owner>/bluesteal-android.git
+git clone https://github.com/acmesecorg/bluesteal-android.git
 cd bluesteal-android
 # AGP needs JDK 17+. If your default `java` is older, point at Android Studio's JBR:
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
@@ -92,7 +90,7 @@ Open in Android Studio if you prefer a GUI.
 ### Windows (Visual Studio 2022)
 
 ```bash
-git clone https://github.com/<owner>/bluesteal-windows.git
+git clone https://github.com/acmesecorg/bluesteal-windows.git
 # open Bluesteal/Bluesteal.sln in Visual Studio and run
 ```
 
@@ -160,8 +158,4 @@ the advert-capture work that informed it.
 ## Status
 
 Personal-scale research project. Pairing works cross-platform over the caBLE
-tunnel; the re-broadcast path is supported everywhere except iOS. The earlier
-WebRTC-over-MQTT relay has been removed on all four platforms — the tunnel is
-now the only transport.
-
-Issues / PRs welcome.
+tunnel; the re-broadcast path is supported everywhere except iOS.

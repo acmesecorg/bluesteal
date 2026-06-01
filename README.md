@@ -27,7 +27,7 @@ tunnel** (see below). The cryptography is byte-compatible across .NET, CryptoKit
 
 ---
 
-## Architecture in one paragraph
+## Architecture
 
 Devices pair over the public **caBLE tunnel servers** (`cable.ua5v.com` et al.)
 — the same WebSocket bridges Chromium and FIDO authenticators use for hybrid
@@ -56,45 +56,6 @@ derivation, the OOB-token rationale, and the empirical server-bridging results.
 > rate-limited or blocked at any time. Two sessions sharing a code collide on
 > `tunnel_id` (they can't observe each other — the bridge is 1:1). This is a
 > personal-scale research tool, not a product.
-
----
-
-## Building each platform
-
-No secrets or credentials are needed — just clone and build.
-
-### macOS / iOS (Xcode)
-
-```bash
-git clone https://github.com/acmesecorg/bluesteal-macos.git
-open bluesteal-macos/bluesteal.xcodeproj      # scheme: bluesteal
-```
-
-Same for iOS: clone `bluesteal-ios`, open the `.xcodeproj` (scheme
-`bluesteal-ios`). Both use Xcode 16 file-system-synchronized groups, so any
-source file under the app folder is picked up automatically. iOS needs a signing
-team for device builds (`-allowProvisioningUpdates`).
-
-### Android (Android Studio or CLI)
-
-```bash
-git clone https://github.com/acmesecorg/bluesteal-android.git
-cd bluesteal-android
-# AGP needs JDK 17+. If your default `java` is older, point at Android Studio's JBR:
-export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
-./gradlew installDebug                          # with a device/emulator attached
-```
-
-Open in Android Studio if you prefer a GUI.
-
-### Windows (Visual Studio 2022)
-
-```bash
-git clone https://github.com/acmesecorg/bluesteal-windows.git
-# open Bluesteal/Bluesteal.sln in Visual Studio and run
-```
-
-Requires the WinUI 3 / Windows App SDK workload.
 
 ---
 

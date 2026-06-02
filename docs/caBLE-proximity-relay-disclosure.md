@@ -6,7 +6,7 @@
 |---|---|
 | **Affected mechanism** | FIDO CTAP 2.2 *hybrid* transport (formerly "caBLE" / cloud-assisted BLE) and the equivalent cross-device flows being reused for digital-credential presentation |
 | **Class** | Proximity-check bypass / authentication relay (not a break of FIDO cryptography or origin binding) |
-| **Proof of concept** | `bluesteal` — a cross-platform (Windows / macOS / iOS / Android) BLE advert capture-and-rebroadcast tool |
+| **Proof of concept** | `Blue Steal` — a cross-platform (Windows / macOS / iOS / Android) BLE advert capture-and-rebroadcast tool |
 | **Disclosure status** | Responsible disclosure — see [Disclosure](#9-responsible-disclosure) |
 
 ---
@@ -29,7 +29,7 @@ computer must receive it before the sign-in can complete.
 This report shows that the BLE proximity check is an **assumption, not a
 guarantee**. The advertisement is an unauthenticated, location-agnostic blob of
 bytes; "I can hear the advertisement" does not imply "the phone is here." The
-`bluesteal` proof of concept demonstrates this empirically by capturing a
+`Blue Steal` proof of concept demonstrates this empirically by capturing a
 genuine caBLE advertisement on one device and faithfully re-broadcasting it on
 another, on the opposite side of the world if desired. A second, compounding
 finding is that the **tunnel servers FIDO uses to carry the CTAP/CBOR payload
@@ -128,7 +128,7 @@ advertisement as *proof of presence*. That inference is false.
 
 ### 4.2 `bluesteal` disproves it empirically
 
-`bluesteal` is a small cross-platform tool that does exactly two things to a
+`Blue Steal` is a small cross-platform tool that does exactly two things to a
 genuine caBLE advertisement:
 
 1. **Capture.** It scans for live caBLE adverts (`0xFFF9` / `0xFDE2`) that a real
@@ -139,7 +139,7 @@ genuine caBLE advertisement:
 A browser next to the second device receives the advertisement and concludes the
 authenticator phone is nearby — when in fact the phone is wherever the *first*
 device is. The "you must be in the room" control is reduced to "you must be in
-Bluetooth range of *some* `bluesteal` node," and those nodes can be anywhere. We
+Bluetooth range of *some* `Blue Steal` node," and those nodes can be anywhere. We
 have reproduced relayed sessions across separate machines and platforms; the
 re-broadcast fidelity is platform-dependent (Windows/Android re-emit raw
 service-data faithfully; macOS uses a lossy UUID encoding; iOS can only capture).
@@ -147,7 +147,7 @@ service-data faithfully; macOS uses a lossy UUID encoding; iOS can only capture)
 ### 4.3 Compounding issue: the tunnel server *is* the side channel
 
 A relay normally needs its own out-of-band link to move the advertisement from
-the victim's vicinity to the attacker's. `bluesteal` shows this link is already
+the victim's vicinity to the attacker's. `Blue Steal` shows this link is already
 provided **by FIDO's own infrastructure**: the public tunnel servers
 (`cable.ua5v.com`, `cable.auth.com`, and the hashed-domain family) are generic,
 blind, NAT-traversing, TLS-terminated 1:1 byte bridges. Two endpoints that share
@@ -169,9 +169,9 @@ only thing the cross-device flow has to prevent a remote relay.
 
 ---
 
-## 5. Proof of concept: `bluesteal` as a man-in-the-middle relay
+## 5. Proof of concept: `Blue Steal` as a man-in-the-middle relay
 
-`bluesteal` operates as a MITM on the *proximity channel*. One node sits in
+`Blue Steal` operates as a MITM on the *proximity channel*. One node sits in
 Bluetooth range of the victim's phone and captures its advertisement; a second
 node sits next to the attacker's client and re-broadcasts it; the FIDO tunnel
 ferries the bytes between them. The attacker's client thus satisfies the BLE
@@ -188,8 +188,8 @@ follow.
 3. The victim scans it with their phone. The phone — believing it is helping a
    normal cross-device login — emits the caBLE advertisement and stands ready to
    authenticate.
-4. A `bluesteal` node near the victim captures the advertisement and relays it
-   (over the FIDO tunnel) to a `bluesteal` node beside the attacker's machine,
+4. A `Blue Steal` node near the victim captures the advertisement and relays it
+   (over the FIDO tunnel) to a `Blue Steal` node beside the attacker's machine,
    which re-broadcasts it.
 5. The attacker's browser sees the advertisement, the proximity check passes, the
    tunnel completes, and the **victim's phone signs the assertion for the
@@ -197,7 +197,7 @@ follow.
    victim. Origin binding did not help — the origin really was the genuine RP.
 
 The only defence that *should* have stopped step 5 is proximity, and that is the
-control `bluesteal` defeats.
+control `Blue Steal` defeats.
 
 ### Scenario B — Relaying a verifiable digital credential
 
@@ -228,7 +228,7 @@ assumption falls for exactly the same reason as Scenario A.
 - **Related real-world activity already exists.** Cross-device sign-in abuse has
   been observed in the wild (e.g. the "PoisonSeed" QR-phishing campaigns) and in
   independent PoCs that relay BLE adverts via deployed beacons [[7]][[8]][[9]].
-  `bluesteal` adds a clean, cross-platform demonstration that the **BLE proximity
+  `Blue Steal` adds a clean, cross-platform demonstration that the **BLE proximity
   layer itself** is relayable and that **the FIDO tunnel can be the relay's own
   carrier**.
 
@@ -279,7 +279,7 @@ tunnel servers operated by major platform vendors.
 
 ## 9. Responsible disclosure
 
-This document and the `bluesteal` proof of concept are intended for defensive
+This document and the `Blue Steal` proof of concept are intended for defensive
 research and to motivate hardening of the cross-device flow. The PoC is a
 relay/observation tool; it does not break FIDO cryptography and it carries no
 exploit against any relying party beyond demonstrating the proximity bypass.

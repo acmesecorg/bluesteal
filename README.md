@@ -1,4 +1,4 @@
-# bluesteal
+# Blue Steal
 
 A small experiment in observing and re-broadcasting **FIDO CTAP 2.2 hybrid-tunnel
 ("caBLE") Bluetooth Low Energy advertisements** across devices.

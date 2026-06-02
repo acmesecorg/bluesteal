@@ -1,7 +1,11 @@
 # Blue Steal
 
 A small experiment in observing and re-broadcasting **FIDO CTAP 2.2 hybrid-tunnel
-("caBLE") Bluetooth Low Energy advertisements** across devices.
+("caBLE") Bluetooth Low Energy advertisements** across devices — and a
+[responsible-disclosure proof of concept](docs/caBLE-proximity-relay-disclosure.md)
+demonstrating that the BLE proximity check underpinning cross-device sign-in can
+be defeated by relaying captured advertisements over the same tunnel infrastructure
+FIDO uses for authentication.
 
 Two paired devices show each other the caBLE adverts they are scanning live —
 adverts the FIDO authenticator and Chromium-flavoured caller emit during a

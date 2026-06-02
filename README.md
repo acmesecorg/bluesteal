@@ -113,6 +113,7 @@ the advert-capture work that informed it.
 | [`TUNNEL_SIDE_CHANNEL.md`](specs/TUNNEL_SIDE_CHANNEL.md) | The caBLE tunnel transport: key derivation from the pairing code, the 11-char OOB token, make-before-break hops, server-bridging probe results, off-label-use risk. Read this first to understand the protocol. |
 | [`REBROADCAST_PLAN.md`](specs/REBROADCAST_PLAN.md) | Design of the "re-emit received adverts over the local BLE radio" feature, including the per-platform peripheral-API limits. |
 | [`IOS_AUTHENTICATOR_CAPTURE.md`](specs/IOS_AUTHENTICATOR_CAPTURE.md) | How to capture a native iOS authenticator's hybrid-transport advert (using the scanner's Diagnostic mode) and what wire format it uses. |
+| [`docs/caBLE-proximity-relay-disclosure.md`](docs/caBLE-proximity-relay-disclosure.md) | Responsible-disclosure report: *Defeating the Proximity Assumption in FIDO Hybrid (caBLE) Transport*. Explains how BLE advert capture-and-relay undermines the cross-device sign-in proximity check, the two concrete attack scenarios (passkey relay and digital-credential relay), why the FIDO tunnel servers themselves serve as a ready-made side channel, and recommendations for the ecosystem, relying parties, and users. |
 
 ---
 

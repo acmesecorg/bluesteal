@@ -106,7 +106,7 @@ the advert-capture work that informed it.
 
 ---
 
-## Project docs (`specs/`)
+## Project docs
 
 | File | What it covers |
 |------|----------------|

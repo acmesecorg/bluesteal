@@ -35,7 +35,7 @@ tunnel** (see below). The cryptography is byte-compatible across .NET, CryptoKit
 
 Devices pair over the public **caBLE tunnel servers** (`cable.ua5v.com` et al.)
 — the same WebSocket bridges Chromium and FIDO authenticators use for hybrid
-sign-in, here carrying bluesteal's own framed messages instead of CTAP traffic.
+sign-in, here carrying blue steal's own framed messages instead of CTAP traffic.
 The host derives a tunnel slot from a short pairing code (HKDF-SHA256 →
 `tunnel_id`, pre-shared key, and a responder static key), opens
 `wss://<host>/cable/new/<tunnel_id>`, and learns its server-assigned 3-byte
@@ -43,8 +43,7 @@ The host derives a tunnel slot from a short pairing code (HKDF-SHA256 →
 `CODE-ROUTING`, e.g. `ABCDE-7C4A9C` — which the user shares the same way they'd
 share the code (verbally / iMessage / WhatsApp). The peer connects to
 `wss://<host>/cable/connect/<routing_id>/<tunnel_id>`; the two run a **Noise
-NKpsk0** handshake (used purely as an AEAD framing layer, *not* FIDO-grade
-authentication) and then exchange `RelayMessage` JSON. Because the relay caps
+NKpsk0** handshake and then exchange `RelayMessage` JSON. Because the relay caps
 idle sockets at ~60 s, the host runs a **make-before-break hop every 30 s** —
 opening a fresh tunnel and promoting the peer onto it without dropping the
 session — plus a ~2 s heartbeat to keep traffic flowing. Either side (except
@@ -70,11 +69,11 @@ derivation, the OOB-token rationale, and the empirical server-bridging results.
 2. Share the token with the second device (out of band — read it aloud, message
    it, etc.).
 3. On the second device, click **Join…**, paste the token, **Connect**.
-4. Within ~30–60 s the tunnel reaches **open** on both ends and live adverts
+4. Within a few seconds the tunnel reaches **open** on both ends and live adverts
    flow. Join promptly — the host's first tunnel socket ages out at the relay's
    idle cap before the first hop engages.
 
-iOS is host-only: it always hosts, and a macOS/Windows peer joins its token.
+iOS is host-only: it always hosts, and a macOS/Windows/Android peer can join it's token.
 
 ### Driving host/join for testing
 

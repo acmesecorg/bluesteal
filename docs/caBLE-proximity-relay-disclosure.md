@@ -26,7 +26,7 @@ The hybrid transport tries to re-establish that assumption with a **Bluetooth
 Low Energy (BLE) proximity check** — the phone emits a BLE advertisement and the
 computer must receive it before the sign-in can complete.
 
-This report shows that the BLE proximity check is an **assumption, not a
+This report highlights what is often not made obvious - that the BLE proximity check is an **assumption, not a
 guarantee**. The advertisement is an unauthenticated, location-agnostic blob of
 bytes; "I can hear the advertisement" does not imply "the phone is here." The
 `Blue Steal` proof of concept demonstrates this empirically by capturing a
@@ -38,7 +38,7 @@ between the two locations** — so the relay needs no infrastructure of its own.
 
 The consequence is a man-in-the-middle relay that turns a "you must be in the
 room" control into "you must be within Bluetooth range of *a device the attacker
-controls*," which a phishing campaign can arrange remotely.
+controls*," which a spear phishing campaign can arrange remotely.
 
 ---
 
@@ -126,7 +126,7 @@ from a phone 30 cm away" from "this advertisement was captured elsewhere and
 re-emitted by a radio next to me." The client treats *receipt* of the
 advertisement as *proof of presence*. That inference is false.
 
-### 4.2 `bluesteal` disproves it empirically
+### 4.2 `Blue steal` disproves it empirically
 
 `Blue Steal` is a small cross-platform tool that does exactly two things to a
 genuine caBLE advertisement:

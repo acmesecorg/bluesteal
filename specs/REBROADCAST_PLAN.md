@@ -15,7 +15,7 @@
 >   iOS-native authenticators. It would still be needed to detect Chromium-on-
 >   macOS *acting as* an authenticator.
 
-This document describes the changes needed in luesteal-macos to re-broadcast peer-received BLE advertisements on the local Bluetooth peripheral, mirroring the Windows implementation in luesteal-windows.
+This document describes the changes needed in bluesteal-macos to re-broadcast peer-received BLE advertisements on the local Bluetooth peripheral, mirroring the Windows implementation in bluesteal-windows.
 
 ---
 

@@ -1,4 +1,4 @@
-# Bluesteal Side-Channel via caBLE Tunnel Server (Feasibility & Implementation)
+# Blue steal Side-Channel via caBLE Tunnel Server (Feasibility & Implementation)
 
 ## Verdict: feasible, with one load-bearing assumption to confirm empirically in step 1
 
@@ -10,7 +10,7 @@ connection on `wss://<host>/cable/new/<HEX(tunnel_id)>` (subprotocol
 `tunnel_id`. Once both sides are present, every binary frame from one is
 delivered to the other. There is **no FIDO-aware inspection in the server** —
 it cannot tell whether the framed bytes are Noise/CTAP2 or anything else.
-That is exactly what bluesteal needs: a free, NAT-traversing,
+That is exactly what blue steal needs: a free, NAT-traversing,
 TLS-terminated, low-latency byte pipe that two endpoints can rendezvous on
 if they share one secret (the existing 5-char pairing code).
 
@@ -22,7 +22,7 @@ What makes this work for our use case:
   MQTT, no STUN/TURN.
 - The host plays the **authenticator role**: opens `/cable/new/<tid>`,
   reads `X-caBLE-Routing-ID`. It does **not** need to put the EID on BLE
-  (this is bluesteal traffic, not real FIDO traffic) — the routing ID is
+  (this is blue steal traffic, not real FIDO traffic) — the routing ID is
   only needed by the server to know which downstream node holds the
   publisher socket.
 - The peer plays the **Chromium consumer role**: opens
@@ -33,10 +33,10 @@ What makes this work for our use case:
   to suffice. **Step 1 of the plan verifies this** before we build
   anything substantial.
 - The 1:1 server bridging is already the design point — Chromium's
-  `FidoTunnelDevice` and the Rust authenticator's `Tunnel::connect` both
+  `FidoTunnelDevice` and the Rust authenticator's (original open source implementation) `Tunnel::connect` both
   consume it this way.
 
-What's already in-house (massive head start):
+What's already in-house (not currently open source):
 
 - `VirtualFido.CrossPlatform.Cable.TunnelServerDomain` — `Get(ushort id)
   → host` with the salt/SHA-256/base-32 derivation. Bluesteal can either
@@ -45,11 +45,11 @@ What's already in-house (massive head start):
   against `wss://<host>/cable/new/<HEX(tunnelId)>`, subprotocol
   `fido.cable`, `X-caBLE-Routing-ID` header parse, inbound
   `Channel<byte[]>`, `SendAsync`/`ReceiveAsync`. This is exactly the
-  host-side socket bluesteal needs.
+  host-side socket blue steal needs.
 - `VirtualFido.Crypto.CableNoise.{Noise, HandshakeResponder, Crypter,
   P256}` — full Noise NKpsk0 responder + the dual-construction
   post-handshake `Crypter`. For framing-preservation between the two
-  bluesteal endpoints this is the engine; we'd also need a thin
+  blue steal endpoints this is the engine; we'd also need a thin
   **initiator** counterpart (Chromium has `BuildHandshakeMessage`; Rust
   has `build_initiator` in `cable/noise.rs`) — straightforward to add as
   a peer of `HandshakeResponder.cs`. (Look at `chromium
@@ -61,13 +61,13 @@ What's already in-house (massive head start):
   `PropertyChanged` ticks — we can keep that interface intact and swap
   the transport behind it.
 
-What's new in bluesteal:
+What's new in blue steal:
 
 1. A `TunnelTransport` (sibling of today's `SignalingClient` + WebRTC
    stack) that does the deterministic derivation, opens the right socket
    per role, runs Noise, and exposes the same `Send`/`OnMessage` shape.
 2. A small **Noise NKpsk0 initiator** in
-   `VirtualFido.CrossPlatform.CableNoise` (or vendored into bluesteal)
+   `VirtualFido.CrossPlatform.CableNoise` (or vendored into blue steal)
    so the peer side can complete the handshake the host's existing
    `HandshakeResponder` is waiting for.
 3. A `TransportKind` enum on `RelayClient` (`WebRtc` | `CableTunnel`)
@@ -77,13 +77,13 @@ What's new in bluesteal:
    `tunnel_id`, `static_keypair_seed`, `psk`) so both sides agree
    without any QR.
 
-## Architectural mapping (which caBLE field is what, in bluesteal terms)
+## Architectural mapping (which caBLE field is what, in blue steal terms)
 
-Because there is no real FIDO QR in bluesteal, we synthesise the
+Because there is no real FIDO QR in blue steal, we synthesise the
 cryptographic inputs from the 5-char code so the existing caBLE
 primitives "just work":
 
-| caBLE concept | Real FIDO source | Bluesteal source |
+| caBLE concept | Real FIDO source | Blue steal source |
 |---|---|---|
 | `tunnel_server_id` (u16) | derived from `qr_secret` via HKDF info=2 in the spec, but actually picked by the authenticator from `num_known_domains` in the QR | `HKDF(code_utf8, info="bluesteal/tunnel-server-id") mod 256`, clamped to a stable assigned id (0 = Google) for the first cut |
 | `tunnel_id` (16 B) | `HKDF(qr_secret, info=LE32(2))` | `HKDF(code_utf8, info="bluesteal/tunnel-id", L=16)` |
@@ -135,17 +135,17 @@ working unmodified.
    concern.
 3. **Session lifetime.** Real caBLE sessions are short (seconds). The
    tunnel server may impose an idle timeout that's shorter than
-   bluesteal's typical session. We need to measure and, if needed, run
+   blue steal's typical session. We need to measure and, if needed, run
    heartbeats at <30 s spacing (the existing `AdvertRelay` heartbeat is
    4 s — already well within any plausible limit).
-4. **Concurrent sessions.** Two bluesteal users with the same 5-char
+4. **Concurrent sessions.** Two blue steal users with the same 5-char
    code at the same time would collide on `tunnel_id`. This is the same
    property the existing MQTT-topic approach has, but on MQTT a third
    party could observe; on the tunnel server they can only collide.
    Document in the README.
 5. **The "second tunnel during authentication" framing in the user's
    question** — i.e. that a real iCloud-Keychain caBLE session is in
-   flight on a different `tunnel_id` and bluesteal opens its own session
+   flight on a different `tunnel_id` and blue steal opens its own session
    alongside it — is fine and was the original mental model. Nothing
    about our use of the server conflicts with another session, because
    `tunnel_id` partitions them.
@@ -200,7 +200,7 @@ Not modified at all:
 ## Risks / open questions to settle during execution
 
 - **VirtualFido coupling**: project-ref vs vendor. Recommend vendor (a
-  single explicit copy under `Bluesteal/Crypto/Cable/`) so bluesteal
+  single explicit copy under `Bluesteal/Crypto/Cable/`) so blue steal
   stays buildable without the sibling VirtualFido repo. Annotate with
   `// origin: VirtualFido.CrossPlatform/Cable/TunnelClient.cs @ <sha>`
   headers for traceability.
@@ -234,7 +234,7 @@ Not modified at all:
    escalate**: the design needs a 6-hex-char routing_id hop over the
    existing MQTT signaling (still a major simplification over WebRTC)
    before the rest of the plan proceeds.
-2. **Vendor the C# caBLE primitives into bluesteal** under
+2. **Vendor the C# caBLE primitives into blue steal** under
    `Bluesteal/Crypto/Cable/` and `Bluesteal/Crypto/CableNoise/`. Copy
    `TunnelServerDomain.cs`, `TunnelClient.cs`, `CableEid.cs` (only if
    needed for HKDF helpers — likely not), and the four `CableNoise`

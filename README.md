@@ -31,6 +31,21 @@ tunnel** (see below). The cryptography is byte-compatible across .NET, CryptoKit
 
 ---
 
+## How it works
+
+![How Blue Steal works — relaying the caBLE proximity beacon between two locations](docs/how-blue-steal-works.png)
+
+A **peer** signs in on behalf of the **host** by relaying the caBLE proximity
+beacon over FIDO's own tunnel infrastructure: the host captures the beacon and
+hosts the tunnel, and the peer re-broadcasts it next to the machine that
+completes the sign-in. The host can be any platform (including iOS, which is
+capture-only); the re-broadcasting peer must be Windows, macOS, or Android. See
+the [responsible-disclosure report](docs/caBLE-proximity-relay-disclosure.md)
+for the full analysis. *(Diagram source:
+[`docs/how-blue-steal-works.svg`](docs/how-blue-steal-works.svg).)*
+
+---
+
 ## Architecture
 
 Devices pair over the public **caBLE tunnel servers** (`cable.ua5v.com` et al.)

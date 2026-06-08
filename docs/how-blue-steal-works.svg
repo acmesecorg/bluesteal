@@ -16,14 +16,11 @@
     <marker id="ahAmber" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto">
       <path d="M1,1 L11,6 L1,11 Z" fill="#D97706"/>
     </marker>
-    <marker id="ahDark" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto">
-      <path d="M1,1 L11,6 L1,11 Z" fill="#334155"/>
+    <marker id="ahDark" markerWidth="12" markerHeight="12" refX="8" refY="5.5" orient="auto">
+      <path d="M1,1 L10,5.5 L1,10 Z" fill="#334155"/>
     </marker>
-    <marker id="ahBlue" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto">
-      <path d="M1,1 L11,6 L1,11 Z" fill="#0EA5E9"/>
-    </marker>
-    <marker id="ahWhite" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto">
-      <path d="M1,1 L11,6 L1,11 Z" fill="#FFFFFF"/>
+    <marker id="ahBlue" markerWidth="12" markerHeight="12" refX="8" refY="5.5" orient="auto">
+      <path d="M1,1 L10,5.5 L1,10 Z" fill="#0EA5E9"/>
     </marker>
   </defs>
 
@@ -31,189 +28,210 @@
   <rect x="20" y="20" width="1560" height="1040" rx="28" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
 
   <!-- title -->
-  <text x="800" y="74" text-anchor="middle" font-size="42" font-weight="700" fill="#0F172A">How Blue Steal Works</text>
-  <text x="800" y="110" text-anchor="middle" font-size="21" fill="#475569">Relaying the FIDO caBLE proximity beacon so a <tspan font-weight="600" fill="#1D4ED8">peer</tspan> signs in on behalf of the <tspan font-weight="600" fill="#0E7490">host</tspan></text>
+  <text x="800" y="92" text-anchor="middle" font-size="42" font-weight="700" fill="#0F172A">How Blue Steal Works</text>
 
   <!-- divider between the two physically separated locations -->
-  <line x1="800" y1="205" x2="800" y2="835" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="3 9"/>
-  <g transform="translate(800,832)">
-    <rect x="-150" y="-2" width="300" height="34" rx="17" fill="#F1F5F9" stroke="#CBD5E1"/>
-    <text x="0" y="21" text-anchor="middle" font-size="15" fill="#64748B">↔  physically separated · any distance</text>
-  </g>
+  <line x1="800" y1="205" x2="800" y2="815" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="3 9"/>
 
   <!-- ===================== HOST PANEL ===================== -->
-  <rect x="48" y="200" width="712" height="620" rx="20" fill="#ECFEFF" stroke="#67E8F9" stroke-width="2"/>
-  <text x="78" y="244" font-size="26" font-weight="700" fill="#0E7490">HOST</text>
-  <text x="170" y="244" font-size="17" fill="#155E75">· holds the real passkey (the victim)</text>
+  <rect x="48" y="200" width="712" height="615" rx="20" fill="#ECFEFF" stroke="#67E8F9" stroke-width="2"/>
+  <text x="78" y="242" font-size="26" font-weight="700" fill="#0E7490">HOST</text>
+  <text x="170" y="242" font-size="17" fill="#155E75">· holds the passkey (the victim)</text>
 
   <!-- host machine (outer-left) -->
-  <g>
-    <rect x="92" y="300" width="296" height="290" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
-    <!-- laptop glyph -->
-    <g transform="translate(240,400)">
-      <rect x="-66" y="-46" width="132" height="92" rx="7" fill="#1F2937"/>
-      <rect x="-56" y="-36" width="112" height="72" rx="4" fill="#CBD5E1"/>
-      <!-- tiny QR on screen -->
-      <g transform="translate(-22,-30)" fill="#1F2937">
-        <rect x="0" y="0" width="14" height="14"/><rect x="3" y="3" width="8" height="8" fill="#CBD5E1"/><rect x="5" y="5" width="4" height="4" fill="#1F2937"/>
-        <rect x="30" y="0" width="14" height="14"/><rect x="33" y="3" width="8" height="8" fill="#CBD5E1"/><rect x="35" y="5" width="4" height="4" fill="#1F2937"/>
-        <rect x="0" y="30" width="14" height="14"/><rect x="3" y="33" width="8" height="8" fill="#CBD5E1"/><rect x="5" y="35" width="4" height="4" fill="#1F2937"/>
-        <rect x="20" y="20" width="5" height="5"/><rect x="30" y="22" width="5" height="5"/><rect x="38" y="32" width="5" height="5"/><rect x="22" y="38" width="5" height="5"/>
+  <g transform="translate(0,-24)">
+    <rect x="80" y="300" width="280" height="275" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
+    <g transform="translate(220,398)">
+      <rect x="-64" y="-44" width="128" height="88" rx="7" fill="#1F2937"/>
+      <rect x="-54" y="-34" width="108" height="68" rx="4" fill="#CBD5E1"/>
+      <g transform="translate(-21,-29)" fill="#1F2937">
+        <rect x="0" y="0" width="13" height="13"/><rect x="3" y="3" width="7" height="7" fill="#CBD5E1"/><rect x="5" y="5" width="3" height="3" fill="#1F2937"/>
+        <rect x="29" y="0" width="13" height="13"/><rect x="32" y="3" width="7" height="7" fill="#CBD5E1"/><rect x="34" y="5" width="3" height="3" fill="#1F2937"/>
+        <rect x="0" y="29" width="13" height="13"/><rect x="3" y="32" width="7" height="7" fill="#CBD5E1"/><rect x="5" y="34" width="3" height="3" fill="#1F2937"/>
+        <rect x="20" y="19" width="5" height="5"/><rect x="29" y="21" width="5" height="5"/><rect x="36" y="31" width="5" height="5"/><rect x="21" y="37" width="5" height="5"/>
       </g>
-      <polygon points="-84,52 84,52 98,66 -98,66" fill="#94A3B8"/>
+      <polygon points="-82,50 82,50 95,64 -95,64" fill="#94A3B8"/>
     </g>
-    <text x="240" y="512" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Host machine</text>
-    <text x="240" y="538" text-anchor="middle" font-size="14.5" fill="#475569">Receives the QR code by</text>
-    <text x="240" y="558" text-anchor="middle" font-size="14.5" fill="#475569">email / Teams · displays it</text>
+    <text x="220" y="500" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Host machine</text>
+    <text x="220" y="526" text-anchor="middle" font-size="14" fill="#475569">Receives the QR by email /</text>
+    <text x="220" y="545" text-anchor="middle" font-size="14" fill="#475569">Teams · displays it on screen</text>
   </g>
 
   <!-- host phone w/ Blue Steal (inner-right) -->
-  <g>
-    <rect x="440" y="300" width="296" height="290" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
-    <!-- phone glyph -->
-    <g transform="translate(588,398)">
-      <rect x="-40" y="-74" width="80" height="148" rx="15" fill="#1F2937"/>
-      <rect x="-33" y="-62" width="66" height="124" rx="8" fill="#E5F6FB"/>
-      <rect x="-9" y="-69" width="18" height="5" rx="2.5" fill="#0B1220"/>
-      <!-- BLE beacon waves emitting -->
+  <g transform="translate(0,-24)">
+    <rect x="450" y="300" width="270" height="275" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
+    <g transform="translate(585,392)">
+      <rect x="-38" y="-72" width="76" height="144" rx="15" fill="#1F2937"/>
+      <rect x="-31" y="-60" width="62" height="120" rx="8" fill="#E5F6FB"/>
+      <rect x="-9" y="-67" width="18" height="5" rx="2.5" fill="#0B1220"/>
+      <!-- incoming BLE beacon waves (capturing from the air, on the left) -->
       <g stroke="#0EA5E9" stroke-width="3" fill="none" opacity="0.9">
-        <path d="M44,-18 a16,16 0 0 1 0,36"/>
-        <path d="M52,-30 a28,28 0 0 1 0,60"/>
+        <path d="M-44,-16 a16,16 0 0 0 0,32"/>
+        <path d="M-52,-28 a28,28 0 0 0 0,56"/>
       </g>
     </g>
-    <!-- Blue Steal badge -->
-    <g transform="translate(704,318)">
-      <circle r="19" fill="url(#badgeGrad)"/>
-      <circle r="12.5" fill="none" stroke="#FFFFFF" stroke-width="3.4"/>
-      <polygon points="0,-9 -4.5,-2 4.5,-2" fill="#FFFFFF"/>
-      <polygon points="0,9 -4.5,2 4.5,2" fill="#FFFFFF"/>
+    <g transform="translate(700,320)">
+      <circle r="18" fill="url(#badgeGrad)"/>
+      <circle r="12" fill="none" stroke="#FFFFFF" stroke-width="3.2"/>
+      <polygon points="0,-8.5 -4.2,-2 4.2,-2" fill="#FFFFFF"/>
+      <polygon points="0,8.5 -4.2,2 4.2,2" fill="#FFFFFF"/>
     </g>
-    <text x="588" y="512" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Host phone · Blue Steal</text>
-    <text x="588" y="538" text-anchor="middle" font-size="14.5" fill="#475569">Scans the QR with the passkey,</text>
-    <text x="588" y="558" text-anchor="middle" font-size="14.5" fill="#475569">emits the BLE beacon → captures it,</text>
-    <text x="588" y="578" text-anchor="middle" font-size="14.5" fill="#475569">hosts the tunnel, shares the token</text>
-    <g transform="translate(588,614)">
-      <rect x="-150" y="-15" width="300" height="30" rx="15" fill="#CFFAFE" stroke="#67E8F9" stroke-width="1.5"/>
-      <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="600" fill="#0E7490">capture-only · any platform, incl. iOS</text>
-    </g>
+    <text x="585" y="500" text-anchor="middle" font-size="16.5" font-weight="700" fill="#0F172A">Host device · Blue Steal</text>
+    <text x="585" y="525" text-anchor="middle" font-size="14" fill="#475569">Captures the BLE beacon over</text>
+    <text x="585" y="544" text-anchor="middle" font-size="14" fill="#475569">the air, relays it down the tunnel</text>
+  </g>
+  <!-- host platform qualifier -->
+  <g transform="translate(585,574)">
+    <rect x="-148" y="-15" width="296" height="30" rx="15" fill="#CFFAFE" stroke="#67E8F9" stroke-width="1.5"/>
+    <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="600" fill="#0E7490">capture-only · any platform, incl. iOS</text>
   </g>
 
   <!-- ===================== PEER PANEL ===================== -->
-  <rect x="840" y="200" width="712" height="620" rx="20" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
-  <text x="872" y="244" font-size="26" font-weight="700" fill="#1D4ED8">PEER</text>
-  <text x="966" y="244" font-size="17" fill="#1E40AF">· ends up logged in (the attacker)</text>
+  <rect x="840" y="200" width="712" height="615" rx="20" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
+  <text x="872" y="242" font-size="26" font-weight="700" fill="#1D4ED8">PEER</text>
+  <text x="966" y="242" font-size="17" fill="#1E40AF">· ends up logged in (the attacker)</text>
 
   <!-- peer device w/ Blue Steal (inner-left) -->
-  <g>
-    <rect x="864" y="300" width="296" height="290" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
-    <!-- generic device glyph (tablet/dongle) -->
-    <g transform="translate(1012,398)">
-      <rect x="-44" y="-70" width="88" height="140" rx="14" fill="#1F2937"/>
-      <rect x="-36" y="-58" width="72" height="116" rx="7" fill="#E5F6FB"/>
-      <!-- BLE beacon waves broadcasting (to the right, toward the machine) -->
+  <g transform="translate(0,-24)">
+    <rect x="920" y="300" width="270" height="275" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
+    <g transform="translate(1055,392)">
+      <rect x="-38" y="-72" width="76" height="144" rx="15" fill="#1F2937"/>
+      <rect x="-31" y="-60" width="62" height="120" rx="8" fill="#E5F6FB"/>
+      <rect x="-9" y="-67" width="18" height="5" rx="2.5" fill="#0B1220"/>
+      <!-- outgoing BLE beacon waves (broadcasting to the right) -->
       <g stroke="#0EA5E9" stroke-width="3" fill="none" opacity="0.95">
-        <path d="M48,-18 a16,16 0 0 1 0,36"/>
-        <path d="M56,-30 a28,28 0 0 1 0,60"/>
-        <path d="M64,-42 a40,40 0 0 1 0,84"/>
+        <path d="M44,-16 a16,16 0 0 1 0,32"/>
+        <path d="M52,-28 a28,28 0 0 1 0,56"/>
+        <path d="M60,-40 a40,40 0 0 1 0,80"/>
       </g>
     </g>
-    <g transform="translate(1128,318)">
-      <circle r="19" fill="url(#badgeGrad)"/>
-      <circle r="12.5" fill="none" stroke="#FFFFFF" stroke-width="3.4"/>
-      <polygon points="0,-9 -4.5,-2 4.5,-2" fill="#FFFFFF"/>
-      <polygon points="0,9 -4.5,2 4.5,2" fill="#FFFFFF"/>
+    <g transform="translate(1170,320)">
+      <circle r="18" fill="url(#badgeGrad)"/>
+      <circle r="12" fill="none" stroke="#FFFFFF" stroke-width="3.2"/>
+      <polygon points="0,-8.5 -4.2,-2 4.2,-2" fill="#FFFFFF"/>
+      <polygon points="0,8.5 -4.2,2 4.2,2" fill="#FFFFFF"/>
     </g>
-    <text x="1012" y="512" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Peer device · Blue Steal</text>
-    <text x="1012" y="538" text-anchor="middle" font-size="14.5" fill="#475569">Joins the tunnel and</text>
-    <text x="1012" y="558" text-anchor="middle" font-size="14.5" fill="#475569">re-broadcasts the BLE beacon</text>
-    <text x="1012" y="578" text-anchor="middle" font-size="14.5" fill="#475569">next to the machine</text>
-    <g transform="translate(1012,614)">
-      <rect x="-150" y="-15" width="300" height="30" rx="15" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
-      <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="600" fill="#1D4ED8">re-broadcasts · Windows · macOS · Android</text>
-    </g>
+    <text x="1055" y="500" text-anchor="middle" font-size="16.5" font-weight="700" fill="#0F172A">Peer device · Blue Steal</text>
+    <text x="1055" y="525" text-anchor="middle" font-size="14" fill="#475569">Re-broadcasts the BLE beacon</text>
+    <text x="1055" y="544" text-anchor="middle" font-size="14" fill="#475569">next to the machine</text>
+  </g>
+  <!-- peer platform qualifier -->
+  <g transform="translate(1055,574)">
+    <rect x="-152" y="-15" width="304" height="30" rx="15" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+    <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="600" fill="#1D4ED8">re-broadcasts · Windows · macOS · Android</text>
   </g>
 
   <!-- peer machine (outer-right) -->
-  <g>
-    <rect x="1212" y="300" width="296" height="290" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
-    <g transform="translate(1360,400)">
-      <rect x="-66" y="-46" width="132" height="92" rx="7" fill="#1F2937"/>
-      <rect x="-56" y="-36" width="112" height="72" rx="4" fill="#CBD5E1"/>
-      <!-- QR being generated on screen -->
-      <g transform="translate(-22,-30)" fill="#1F2937">
-        <rect x="0" y="0" width="14" height="14"/><rect x="3" y="3" width="8" height="8" fill="#CBD5E1"/><rect x="5" y="5" width="4" height="4" fill="#1F2937"/>
-        <rect x="30" y="0" width="14" height="14"/><rect x="33" y="3" width="8" height="8" fill="#CBD5E1"/><rect x="35" y="5" width="4" height="4" fill="#1F2937"/>
-        <rect x="0" y="30" width="14" height="14"/><rect x="3" y="33" width="8" height="8" fill="#CBD5E1"/><rect x="5" y="35" width="4" height="4" fill="#1F2937"/>
-        <rect x="20" y="20" width="5" height="5"/><rect x="30" y="22" width="5" height="5"/><rect x="38" y="32" width="5" height="5"/><rect x="22" y="38" width="5" height="5"/>
+  <g transform="translate(0,-24)">
+    <rect x="1260" y="300" width="280" height="275" rx="18" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" filter="url(#soft)"/>
+    <g transform="translate(1400,398)">
+      <rect x="-64" y="-44" width="128" height="88" rx="7" fill="#1F2937"/>
+      <rect x="-54" y="-34" width="108" height="68" rx="4" fill="#CBD5E1"/>
+      <g transform="translate(-21,-29)" fill="#1F2937">
+        <rect x="0" y="0" width="13" height="13"/><rect x="3" y="3" width="7" height="7" fill="#CBD5E1"/><rect x="5" y="5" width="3" height="3" fill="#1F2937"/>
+        <rect x="29" y="0" width="13" height="13"/><rect x="32" y="3" width="7" height="7" fill="#CBD5E1"/><rect x="34" y="5" width="3" height="3" fill="#1F2937"/>
+        <rect x="0" y="29" width="13" height="13"/><rect x="3" y="32" width="7" height="7" fill="#CBD5E1"/><rect x="5" y="34" width="3" height="3" fill="#1F2937"/>
+        <rect x="20" y="19" width="5" height="5"/><rect x="29" y="21" width="5" height="5"/><rect x="36" y="31" width="5" height="5"/><rect x="21" y="37" width="5" height="5"/>
       </g>
-      <polygon points="-84,52 84,52 98,66 -98,66" fill="#94A3B8"/>
+      <polygon points="-82,50 82,50 95,64 -95,64" fill="#94A3B8"/>
     </g>
-    <text x="1360" y="512" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Peer machine</text>
-    <text x="1360" y="538" text-anchor="middle" font-size="14.5" fill="#475569">Starts a genuine sign-in →</text>
-    <text x="1360" y="558" text-anchor="middle" font-size="14.5" fill="#475569">generates the QR; later hears the</text>
-    <text x="1360" y="578" text-anchor="middle" font-size="14.5" fill="#475569">beacon → logs in as the host</text>
+    <text x="1400" y="500" text-anchor="middle" font-size="17" font-weight="700" fill="#0F172A">Peer machine</text>
+    <text x="1400" y="526" text-anchor="middle" font-size="14" fill="#475569">Starts the sign-in, makes the QR;</text>
+    <text x="1400" y="545" text-anchor="middle" font-size="14" fill="#475569">hears the beacon → logs in as host</text>
   </g>
 
-  <!-- relying party cloud (talks to peer machine) -->
-  <g transform="translate(1470,232)">
-    <path d="M-34,8 a16,16 0 0 1 4,-31 a22,22 0 0 1 42,3 a15,15 0 0 1 -2,28 Z" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1.6"/>
-    <text x="2" y="2" text-anchor="middle" font-size="11.5" fill="#1E40AF">genuine</text>
-    <text x="2" y="14" text-anchor="middle" font-size="11.5" fill="#1E40AF">site</text>
+  <!-- 'Genuine Site' tag above each machine's QR screen (both sides — the QR is the genuine site's sign-in) -->
+  <g transform="translate(220,306)">
+    <rect x="-62" y="-14" width="124" height="28" rx="14" fill="#CFFAFE" stroke="#67E8F9" stroke-width="1.5"/>
+    <g transform="translate(-42,0)">
+      <path d="M-3,-1 v-2.5 a3,3 0 0 1 6,0 v2.5" fill="none" stroke="#0E7490" stroke-width="1.5"/>
+      <rect x="-4.5" y="-1" width="9" height="8" rx="1.5" fill="#0E7490"/>
+    </g>
+    <text x="8" y="4.5" text-anchor="middle" font-size="12" font-weight="600" fill="#0E7490">Genuine Site</text>
   </g>
-  <line x1="1432" y1="248" x2="1392" y2="300" stroke="#60A5FA" stroke-width="2" stroke-dasharray="4 4"/>
+  <g transform="translate(1400,306)">
+    <rect x="-62" y="-14" width="124" height="28" rx="14" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+    <g transform="translate(-42,0)">
+      <path d="M-3,-1 v-2.5 a3,3 0 0 1 6,0 v2.5" fill="none" stroke="#1D4ED8" stroke-width="1.5"/>
+      <rect x="-4.5" y="-1" width="9" height="8" rx="1.5" fill="#1D4ED8"/>
+    </g>
+    <text x="8" y="4.5" text-anchor="middle" font-size="12" font-weight="600" fill="#1D4ED8">Genuine Site</text>
+  </g>
 
   <!-- ============ STEP 2: QR transfer (peer machine → host machine, over the top) ============ -->
-  <path d="M1360,300 C1360,150 980,150 800,150 C620,150 240,150 240,300"
+  <path d="M1400,276 C1400,150 1000,150 800,150 C600,150 220,150 220,276"
         fill="none" stroke="#D97706" stroke-width="3.5" stroke-dasharray="9 7" marker-end="url(#ahAmber)"/>
   <g transform="translate(800,150)">
     <rect x="-150" y="-26" width="300" height="44" rx="12" fill="#FFFBEB" stroke="#FCD34D" stroke-width="2"/>
-    <!-- envelope glyph -->
     <g transform="translate(-122,-4)" stroke="#D97706" stroke-width="2" fill="none">
       <rect x="-14" y="-9" width="28" height="19" rx="2.5" fill="#FEF3C7"/>
       <polyline points="-14,-8 0,4 14,-8"/>
     </g>
-    <text x="14" y="0" text-anchor="middle" font-size="15.5" font-weight="600" fill="#92400E">Send the QR code</text>
-    <text x="14" y="14" text-anchor="middle" font-size="12.5" fill="#B45309">by email / Teams</text>
+    <text x="14" y="1" text-anchor="middle" font-size="15.5" font-weight="600" fill="#92400E">Send the QR code</text>
   </g>
 
-  <!-- ============ STEP 3: scan (host machine → host phone) ============ -->
-  <path d="M392,420 C418,420 416,420 436,420" fill="none" stroke="#334155" stroke-width="3.5" marker-end="url(#ahDark)"/>
-  <text x="414" y="402" text-anchor="middle" font-size="13" fill="#334155">scan</text>
-
-  <!-- ============ STEP 5: caBLE tunnel relay (host phone → peer device), the hero ============ -->
-  <!-- bridges the two Blue Steal devices at mid-height, crossing the divider -->
-  <path d="M738,452 L860,452" stroke="url(#tunnelGrad)" stroke-width="24" stroke-linecap="round" marker-end="url(#ahWhite)"/>
-  <g transform="translate(800,452)">
-    <rect x="-214" y="36" width="428" height="62" rx="14" fill="#0F172A"/>
-    <text x="0" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">Relay over the public caBLE tunnel</text>
-    <text x="0" y="82" text-anchor="middle" font-size="13.5" fill="#93C5FD">cable.ua5v.com — FIDO’s own server is the side channel</text>
+  <!-- ============ STEP 3: scan by an unshown passkey device → it emits the beacon ============ -->
+  <!-- host machine 'displays QR' down into the step-3 note -->
+  <path d="M220,553 L220,621" fill="none" stroke="#334155" stroke-width="3" marker-end="url(#ahDark)"/>
+  <text x="252" y="603" font-size="12.5" fill="#334155">read QR</text>
+  <g>
+    <rect x="80" y="623" width="430" height="170" rx="14" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="104" y="656" font-size="15.5" font-weight="700" fill="#0F172A">Scanned by a regular passkey device</text>
+    <text x="104" y="684" font-size="14" fill="#475569">A normal authenticator phone — <tspan font-weight="600" fill="#334155">not shown,</tspan></text>
+    <text x="104" y="704" font-size="14" fill="#475569"><tspan font-weight="600" fill="#334155">not part of Blue Steal</tspan> — holds the passkey,</text>
+    <text x="104" y="724" font-size="14" fill="#475569">scans the QR on the host machine, and</text>
+    <text x="104" y="744" font-size="14" fill="#475569">emits the encrypted BLE beacon over the air.</text>
   </g>
-  <text x="800" y="430" text-anchor="middle" font-size="13" fill="#334155">beacon bytes: host → peer</text>
+  <!-- BLE beacon over the air → host phone captures it -->
+  <path d="M470,640 C530,576 520,566 540,536" fill="none" stroke="#0EA5E9" stroke-width="3.5" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#ahBlue)"/>
+  <text x="556" y="604" font-size="12.5" font-weight="600" fill="#0369A1">BLE beacon</text>
 
   <!-- ============ STEP 6: re-broadcast (peer device → peer machine) ============ -->
-  <path d="M1162,470 C1186,470 1188,470 1208,470" fill="none" stroke="#0EA5E9" stroke-width="3.5" marker-end="url(#ahBlue)"/>
-  <text x="1185" y="452" text-anchor="middle" font-size="13" fill="#0369A1">BLE</text>
+  <path d="M1192,444 L1256,444" fill="none" stroke="#0EA5E9" stroke-width="3.5" marker-end="url(#ahBlue)"/>
+  <text x="1224" y="426" text-anchor="middle" font-size="12.5" fill="#0369A1">BLE</text>
+
+  <!-- ============ SETUP + STEP 5: caBLE tunnel (established before step 1) ============ -->
+  <path d="M648,754 L952,754" stroke="url(#tunnelGrad)" stroke-width="22" stroke-linecap="round"/>
+  <g transform="translate(800,700)">
+    <rect x="-238" y="-38" width="476" height="80" rx="14" fill="#0F172A"/>
+    <text x="0" y="-15" text-anchor="middle" font-size="15.5" font-weight="700" fill="#FFFFFF">caBLE tunnel — opened in setup, before step 1</text>
+    <text x="0" y="5" text-anchor="middle" font-size="13" fill="#93C5FD">host device hosts · peer device joins with the shared token</text>
+    <!-- step 5: small arrow inside the box showing the relay direction (whole row centered) -->
+    <g transform="translate(72,27)">
+      <text x="-150" y="4" text-anchor="middle" font-size="13" font-weight="600" fill="#E2E8F0">relays the captured beacon</text>
+      <text x="-2" y="4" text-anchor="end" font-size="13" font-weight="700" fill="#FFFFFF">host</text>
+      <line x1="8" y1="0" x2="40" y2="0" stroke="#FFFFFF" stroke-width="2.5"/>
+      <polygon points="40,-5 50,0 40,5" fill="#FFFFFF"/>
+      <text x="58" y="4" font-size="13" font-weight="700" fill="#FFFFFF">peer</text>
+    </g>
+  </g>
 
   <!-- ============ step number badges ============ -->
   <!-- 1: peer machine generates QR -->
-  <g transform="translate(1238,322)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">1</text></g>
-  <!-- 2: QR transfer (on the arc, left of envelope) -->
+  <g transform="translate(1282,298)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">1</text></g>
+  <!-- 2: QR transfer -->
   <g transform="translate(560,150)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">2</text></g>
-  <!-- 3: scan -->
-  <g transform="translate(414,360)"><circle r="15" fill="#111827"/><text y="5" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">3</text></g>
-  <!-- 4: host phone captures + hosts -->
-  <g transform="translate(472,318)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">4</text></g>
-  <!-- 5: tunnel relay -->
-  <g transform="translate(800,452)"><circle r="17" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.5"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#0F172A">5</text></g>
+  <!-- 3: scan note (corner tab on the callout's top-left) -->
+  <g transform="translate(104,623)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">3</text></g>
+  <!-- 4: host phone captures -->
+  <g transform="translate(472,298)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">4</text></g>
+  <!-- 5: relay over tunnel -->
+  <g transform="translate(800,788)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">5</text></g>
   <!-- 6: re-broadcast -->
-  <g transform="translate(1185,420)"><circle r="15" fill="#111827"/><text y="5" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">6</text></g>
+  <g transform="translate(1224,386)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">6</text></g>
   <!-- 7: proximity passes -->
-  <g transform="translate(1452,562)"><circle r="17" fill="#16A34A"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">7</text></g>
+  <g transform="translate(1522,600)"><circle r="17" fill="#111827"/><text y="6" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF">7</text></g>
 
   <!-- ============ outcome footer ============ -->
-  <rect x="48" y="895" width="1504" height="150" rx="16" fill="#FEF2F2" stroke="#FECACA" stroke-width="2"/>
-  <text x="78" y="940" font-size="20" font-weight="700" fill="#B91C1C">Net effect</text>
-  <text x="78" y="972" font-size="16.5" fill="#7F1D1D">The “you must be in the room” Bluetooth proximity check is satisfied remotely. The host’s passkey signs the peer’s session at the</text>
-  <text x="78" y="996" font-size="16.5" fill="#7F1D1D">genuine site — WebAuthn origin binding still holds, but the co-location assumption no longer does.</text>
-  <text x="78" y="1026" font-size="13.5" fill="#9F1239" font-style="italic">Proof-of-concept for responsible disclosure — see docs/caBLE-proximity-relay-disclosure.md</text>
+  <rect x="48" y="838" width="1504" height="172" rx="16" fill="#FEF2F2" stroke="#FECACA" stroke-width="2"/>
+  <text x="78" y="878" font-size="20" font-weight="700" fill="#B91C1C">Net effect</text>
+  <text x="78" y="910" font-size="16.5" fill="#7F1D1D">The “you must be in the room” Bluetooth proximity check is satisfied remotely. The host’s passkey signs the peer’s session at the</text>
+  <text x="78" y="934" font-size="16.5" fill="#7F1D1D">genuine site — WebAuthn origin binding still holds, but the co-location assumption no longer does.</text>
+  <text x="78" y="980" font-size="14" fill="#9F1239"><tspan font-weight="700">Order:</tspan>  <tspan font-weight="700">0</tspan> tunnel set up  ·  <tspan font-weight="700">1</tspan> generate QR  ·  <tspan font-weight="700">2</tspan> send QR  ·  <tspan font-weight="700">3</tspan> scanned by a passkey device  ·  <tspan font-weight="700">4</tspan> Blue Steal captures the beacon  ·  <tspan font-weight="700">5</tspan> relay over the tunnel  ·  <tspan font-weight="700">6</tspan> re-broadcast  ·  <tspan font-weight="700">7</tspan> logged in</text>
+
+  <!-- physically-separated pill (drawn last so it sits on top of the panels) -->
+  <g transform="translate(800,450)">
+    <rect x="-86" y="-16" width="172" height="32" rx="16" fill="#F1F5F9" stroke="#CBD5E1"/>
+    <text x="0" y="5" text-anchor="middle" font-size="12.5" fill="#64748B">↔ physically separated</text>
+  </g>
 </svg>

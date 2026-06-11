@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd .. && ls -d */ 2>/dev/null | grep -i bluesteal; echo \"---\"; ls -la ../bluesteal-windows 2>/dev/null | head -30 || echo \"bluesteal-windows NOT found at sibling path\")",
+      "Bash(PowerShell -Command \"Write-Host \\([System.Environment]::GetFolderPath\\([System.Environment+SpecialFolder]::LocalApplicationData\\)\\)\")",
+      "Bash(dotnet --version)",
+      "Bash(ls -t ~/.claude/projects/*/*.jsonl 2>/dev/null | head -60)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(cat)",
+      "Bash(python /tmp/parse_calls.py)",
+      "Bash(dotnet build *)",
+      "Read(//c/Program Files/dotnet/sdk/10.0.300/**)",
+      "Read(//c/Program Files/dotnet/sdk/10.0.300/Microsoft/**)",
+      "Read(//c/Program Files/dotnet/sdk/10.0.300/Microsoft/VisualStudio/**)",
+      "Bash(find \"/c/Program Files/dotnet/sdk/10.0.300/Microsoft\" -maxdepth 2 -type d 2>/dev/null | head -40; echo \"=== search whole sdk for the dll ===\"; find \"/c/Program Files/dotnet\" -name \"Microsoft.Build.Packaging.Pri.Tasks.dll\" 2>/dev/null)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" \"C:/Users/James.Westgate/source/repos/bluesteal-windows/Bluesteal/Bluesteal/Bluesteal.csproj\" -t:Build -p:Configuration=Debug -p:Platform=x64 -v:m -nologo)",
+      "Bash(rm -rf obj/x64 bin/x64)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Build -p:Configuration=Debug -p:Platform=x64 -v:m -nologo)",
+      "Bash(find Bluesteal -type f)",
+      "Bash(rm -rf Bluesteal)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal/Bluesteal.csproj -t:Build -p:Configuration=Debug -p:Platform=x64 -v:m -nologo)",
+      "Bash(grep -iE \"error|: warning CS|-> Bluesteal\\\\\\\\.dll|-> \")",
+      "Bash(grep -iE \"error|: warning CS|-> Bluesteal\\\\\\\\.dll\")",
+      "Bash(rm -rf obj bin)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Restore,Build -p:Configuration=Debug -p:Platform=x64 -v:m -nologo)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Restore -p:Configuration=Debug -p:Platform=x64 -v:m -nologo)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Restore -p:Configuration=Release -p:Platform=x64 -p:RuntimeIdentifier=win-x64 -v:m -nologo)",
+      "Bash(rm -rf publish)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Publish -p:Configuration=Release -p:Platform=x64 -p:RuntimeIdentifier=win-x64 -p:SelfContained=false -p:WindowsAppSDKSelfContained=true -p:PublishDir=publish/ -v:m -nologo)",
+      "Bash(grep -iE \"WindowsAppRuntime|Bootstrap|Microsoft.WindowsAppSDK|\\\\.exe$\")",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Publish -p:Configuration=Release -p:Platform=x64 -p:RuntimeIdentifier=win-x64 -p:SelfContained=false -p:PublishDir=publish/ -v:m -nologo)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" Bluesteal.csproj -t:Build -p:Configuration=Release -p:Platform=x64 -v:m -nologo)",
+      "Bash(grep -iE \"disclosure|cable|relay|\\\\.md$\")",
+      "Bash(grep -iE \"\\\\.\\(png|jpg|jpeg|gif|svg|webp\\)$\")"
+    ]
+  }
+}

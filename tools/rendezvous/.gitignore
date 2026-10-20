@@ -1,0 +1,5 @@
+# Local Worker secrets for `wrangler dev` — NEVER commit (public repo).
+.dev.vars
+# Wrangler / node working files
+.wrangler/
+node_modules/

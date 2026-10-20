@@ -1,0 +1,6 @@
+# Copy to `.dev.vars` (gitignored) for local `wrangler dev`.
+# In production, set this as a Worker secret instead:
+#   wrangler secret put RENDEZVOUS_KEY
+# Leave blank to run the rendezvous OPEN (no auth) — fine for a quick local test,
+# not for anything exposed.
+RENDEZVOUS_KEY=

@@ -1,0 +1,22 @@
+# Blue Steal pairing rendezvous — minimal KV token drop.
+#
+# Deploy is the repo owner's own action; NOTHING HERE IS A CREDENTIAL.
+#
+# Setup (owner runs these once — see README.md):
+#   wrangler kv namespace create RENDEZVOUS   # prints the real id -> paste below
+#   wrangler secret put RENDEZVOUS_KEY        # optional bearer; NEVER committed
+#   wrangler deploy
+#
+# account_id is intentionally omitted: wrangler uses your logged-in account (or
+# the CLOUDFLARE_ACCOUNT_ID env var). Do not add it to this public repo.
+
+name = "bluesteal-rendezvous"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# Replace with the id printed by `wrangler kv namespace create RENDEZVOUS`.
+# (A KV namespace id is not itself a secret, but it's account-specific, so it's
+# left as a placeholder to keep this public repo account-agnostic.)
+[[kv_namespaces]]
+binding = "RENDEZVOUS"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

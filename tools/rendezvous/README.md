@@ -50,11 +50,13 @@ curl localhost:8787/r/DEMO1
 The host and peer apps read the base URL and bearer from **local, gitignored
 config** — never hardcoded, never committed:
 
-- **iOS**: `Rendezvous.local.xcconfig` (gitignored), via the existing
-  `#include?` pattern. Template: `Rendezvous.local.xcconfig.example`.
-- **Android**: `local.properties` keys `rendezvous.baseUrl` / `rendezvous.key`
-  (already gitignored), surfaced as `BuildConfig` fields. Template in
-  `local.properties.example`.
+- **iOS**: supplied **at runtime** via the URL scheme
+  `bluesteal://config?rv=<baseURL>&room=<room>&k=<bearer>` (open a tappable link
+  or scan a QR of it — Safari's address bar won't launch a custom scheme). It is
+  stored in UserDefaults, never compiled in. See the iOS README.
+- **Android**: `local.properties` keys `rendezvous.baseUrl` / `rendezvous.key` /
+  `rendezvous.room` (already gitignored), surfaced as `BuildConfig` fields.
+  Template in `local.properties.example`. A **Room** button appears once set.
 
 Flow: the host runs a persistent-host loop — each time the relay drops its
 waiting socket (~60s) it reconnects, gets a fresh `routing_id`/token, and `PUT`s

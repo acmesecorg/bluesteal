@@ -79,6 +79,13 @@ What's new in blue steal:
 
 ## Architectural mapping (which caBLE field is what, in blue steal terms)
 
+> For a plain-English explainer of the user-facing `CODE-ROUTING` pairing
+> token — why it has both a secret prefix and a server-assigned routing
+> suffix, and why neither can be stripped — see
+> [`PAIRING_TOKEN.md`](PAIRING_TOKEN.md). Note the `routing_id` row below
+> (`000000` fallback) is the pre-probe assumption, superseded by the Step 1
+> findings further down.
+
 Because there is no real FIDO QR in blue steal, we synthesise the
 cryptographic inputs from the 5-char code so the existing caBLE
 primitives "just work":
